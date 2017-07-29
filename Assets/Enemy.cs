@@ -9,7 +9,13 @@ using Pathfinding;
 public class Enemy : EnemySpriteController {
 
 	[SerializeField]
+	protected int health;
+
+	[SerializeField]
 	protected Transform target;
+
+	[SerializeField]
+	protected Transform defaultTarget;
 
 	[SerializeField]
 	protected float updateRate = 2f;
@@ -87,11 +93,23 @@ public class Enemy : EnemySpriteController {
 		this.AdjustSpriteScale(this.transform.position);
 	}
 
-	public void TakeDamage() {
+	public void TakeDamage(int damageTaken) {
 
+		this.health -= damageTaken;
+		if(this.health <= 0) {
+
+			this.EnemyDied();
+		}
 	}
 
-	private void OnPathComplete(Path p) {
+	protected void EnemyDied() {
+
+		//TODO: Signal for game manager here maybe.
+		//Add something else instead of destroying, maybe cache.
+		GameObject.Destroy(this.gameObject);
+	}
+
+	protected void OnPathComplete(Path p) {
 
 		if(p.error == false) {
 
@@ -112,6 +130,4 @@ public class Enemy : EnemySpriteController {
 			yield return new WaitForSeconds(1 / updateRate);
 		}
 	}
-
-
 }

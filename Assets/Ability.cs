@@ -5,8 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public abstract class Ability : MonoBehaviour {
 
+	[SerializeField]
+	protected int damageDone;
+	[SerializeField]
+	protected int energyCost;
+
 	protected List<Enemy> enemiesInRange;
-	protected float abilityDepthRange;
 
 	void Start() {
 
@@ -17,19 +21,29 @@ public abstract class Ability : MonoBehaviour {
 
 		foreach(Enemy enemy in enemiesInRange) {
 
-			enemy.TakeDamage();
+			enemy.TakeDamage(this.damageDone);
+		}
+	}
+
+	protected void CheckArray() {
+
+		if(this.enemiesInRange == null) {
+
+			this.enemiesInRange = new List<Enemy>();
 		}
 	}
 
 	protected virtual void InitValues() {
 
-		enemiesInRange = new List<Enemy>();
+		this.CheckArray();
 	}
 
 	protected virtual void OnTriggerEnter2D(Collider2D col){ 
 
+		this.CheckArray();
+
 		Enemy enemy = col.GetComponent<Enemy>();
-		if(enemy != null) {
+		if(enemy != null && enemiesInRange.Contains(enemy) == false) {
 
 			enemiesInRange.Add(enemy);
 		}
@@ -37,8 +51,10 @@ public abstract class Ability : MonoBehaviour {
 
 	protected virtual void OnTriggerExit2D(Collider2D col){ 
 
+		this.CheckArray();
+
 		Enemy enemy = col.GetComponent<Enemy>();
-		if(enemy != null) {
+		if(enemy != null && enemiesInRange.Contains(enemy) == true) {
 
 			enemiesInRange.Remove(enemy);
 		}
