@@ -17,10 +17,7 @@ public abstract class Ability : MonoBehaviour {
 
 		foreach(Enemy enemy in enemiesInRange) {
 
-			if(Mathf.Abs(enemy.transform.position.y - this.transform.position.y) < abilityDepthRange) {
-
-				enemy.TakeDamage();
-			}
+			enemy.TakeDamage();
 		}
 	}
 
