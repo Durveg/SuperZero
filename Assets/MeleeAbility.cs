@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Punch : Ability {
+public class MeleeAbility : Ability {
 
 	void Start() {
 

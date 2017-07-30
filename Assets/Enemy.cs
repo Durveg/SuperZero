@@ -8,6 +8,9 @@ using Pathfinding;
 [RequireComponent(typeof(Seeker))]
 public class Enemy : EnemySpriteController {
 
+	public delegate void OnEnemyDestroyedDelegate(Enemy enemy);
+	public event OnEnemyDestroyedDelegate OnEnemyDestoryed;
+
 	[SerializeField]
 	protected int health;
 
@@ -106,6 +109,11 @@ public class Enemy : EnemySpriteController {
 
 		//TODO: Signal for game manager here maybe.
 		//Add something else instead of destroying, maybe cache.
+		if(this.OnEnemyDestoryed != null) {
+
+			this.OnEnemyDestoryed(this);
+		}
+
 		GameObject.Destroy(this.gameObject);
 	}
 

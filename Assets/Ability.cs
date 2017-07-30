@@ -17,15 +17,27 @@ public abstract class Ability : MonoBehaviour {
 		this.InitValues();
 	}
 
-	public void CastAbility() {
+	public virtual void FlipDamageArea() {
 
-		foreach(Enemy enemy in enemiesInRange) {
+		Vector3 newScale = this.transform.localScale;
+		newScale.x = newScale.x * -1f;
+		this.transform.localScale = newScale;
+	}
 
-			enemy.TakeDamage(this.damageDone);
+	public virtual void CastAbility() {
+
+		this.DamageEnemies();
+	}
+
+	protected virtual void DamageEnemies() {
+
+		for(int i = 0; i < this.enemiesInRange.Count; i++) {
+
+			this.enemiesInRange[i].TakeDamage(this.damageDone);
 		}
 	}
 
-	protected void CheckArray() {
+	protected virtual void CheckArray() {
 
 		if(this.enemiesInRange == null) {
 

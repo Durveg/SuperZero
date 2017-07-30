@@ -287,6 +287,7 @@ GameObject:
   m_Component:
   - component: {fileID: 69031826}
   - component: {fileID: 69031827}
+  - component: {fileID: 69031828}
   m_Layer: 10
   m_Name: Stomp
   m_TagString: Untagged
@@ -316,12 +317,25 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 4, y: 0.3}
   m_Direction: 1
+--- !u!114 &69031828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 69031825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf1cb54f39cf64f12927114da36e4f3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageDone: 3
+  energyCost: 5
 --- !u!1 &351403427
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,6 +544,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1011525280}
   - component: {fileID: 1011525281}
+  - component: {fileID: 1011525282}
   m_Layer: 10
   m_Name: BlinkBomb
   m_TagString: Untagged
@@ -559,12 +574,28 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 2, y: 0.3}
   m_Direction: 1
+--- !u!114 &1011525282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1011525279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bb0a9cd75af6481c9622da74d263eea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageDone: 3
+  energyCost: 5
+  blinkDistance: 2.5
+  bombTimer: 1
+  player: {fileID: 1925544350}
 --- !u!1 &1119129955
 GameObject:
   m_ObjectHideFlags: 0
@@ -772,7 +803,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 1.25, y: 0.25}
@@ -796,10 +827,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1575138433}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54a9213d44915490e8753f8cf42b6c1a, type: 3}
+  m_Script: {fileID: 11500000, guid: bf1cb54f39cf64f12927114da36e4f3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageDone: 0
+  damageDone: 1
+  energyCost: 1
 --- !u!1 &1603421990
 GameObject:
   m_ObjectHideFlags: 0
@@ -809,6 +841,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1603421991}
   - component: {fileID: 1603421992}
+  - component: {fileID: 1603421993}
   m_Layer: 10
   m_Name: LaserBeam
   m_TagString: Untagged
@@ -838,7 +871,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 3.5, y: 0.125}
@@ -854,6 +887,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 6, y: 0.25}
   m_EdgeRadius: 0
+--- !u!114 &1603421993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1603421990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf1cb54f39cf64f12927114da36e4f3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageDone: 3
+  energyCost: 3
 --- !u!1 &1673418936
 GameObject:
   m_ObjectHideFlags: 0
@@ -919,8 +965,15 @@ MonoBehaviour:
   playerSpriteTransform: {fileID: 1925544351}
   minMaxY: {x: -4.4, y: 0.75}
   minMaxScale: {x: 1.2, y: 0.9}
-  movementSpeed: 10
-  acceleration: 0.3
+  baseMovementSpeed: 3
+  baseAcceleration: 1.5
+  sprintMovementSpeed: 10
+  sprintAcceleration: 5
+  ablities:
+  - {fileID: 1575138436}
+  - {fileID: 1603421993}
+  - {fileID: 69031828}
+  - {fileID: 1011525282}
 --- !u!4 &1925544351
 Transform:
   m_ObjectHideFlags: 0
