@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class PlayerMovementController : CharacterMovementController {
+public class PlayerManager : CharacterMovementController {
+
+	public delegate void PlayerValueUpdatedDelegate(float value);
+	public event PlayerValueUpdatedDelegate playerPowerUpdated;
 
 	protected Rigidbody2D rBody;
 
