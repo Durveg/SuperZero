@@ -11,6 +11,15 @@ public class HelpNeededEventManager : MonoBehaviour {
 	[SerializeField]
 	protected Transform defaultTarget;
 
+	void Start() {
+
+		Enemy[] enemies = this.GetComponentsInChildren<Enemy>();
+		foreach(Enemy e in enemies) {
+
+			e.UpdateTarget(this.defaultTarget);
+		}
+	}
+
 	protected virtual void OnTriggerEnter2D(Collider2D col){ 
 
 		if(col.tag == "Player") {

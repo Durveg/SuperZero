@@ -17,6 +17,8 @@ public abstract class Ability : MonoBehaviour {
 	protected float cooldownLength;
 	[SerializeField]
 	protected float rootTimer;
+	[SerializeField]
+	protected float knockBackForce;
 
 	protected bool onCooldown = false;
 	protected float power;
@@ -73,7 +75,7 @@ public abstract class Ability : MonoBehaviour {
 
 		for(int i = 0; i < this.enemiesInRange.Count; i++) {
 
-			this.enemiesInRange[i].TakeDamage(this.damageDone);
+			this.enemiesInRange[i].TakeDamage(this.damageDone, this.transform.position, this.knockBackForce);
 		}
 	}
 		

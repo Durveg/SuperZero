@@ -14,6 +14,7 @@ public class Enemy : EnemySpriteController {
 	[SerializeField]
 	protected float health;
 
+	[SerializeField]
 	protected Transform target;
 
 	[SerializeField]
@@ -52,7 +53,7 @@ public class Enemy : EnemySpriteController {
 		StartCoroutine(this.UpdatePath());
 	}
 
-	protected void UpdateTarget(Transform newTarget) {
+	public void UpdateTarget(Transform newTarget) {
 
 		this.target = newTarget;
 	}
@@ -100,13 +101,16 @@ public class Enemy : EnemySpriteController {
 		this.AdjustSpriteScale(this.transform.position);
 	}
 
-	public void TakeDamage(int damageTaken) {
+	public void TakeDamage(int damageTaken, Vector3 incoming, float force) {
 
 		this.health -= damageTaken;
 		if(this.health <= 0) {
 
 			this.EnemyDied();
 		}
+
+		Vector3 dir = (incoming - this.transform.position).normalized;
+		this.rBody.AddForce(dir * force * -1);
 	}
 
 	protected void EnemyDied() {
