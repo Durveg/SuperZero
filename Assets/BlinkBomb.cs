@@ -10,20 +10,36 @@ public class BlinkBomb : Ability {
 	[SerializeField]
 	protected float bombTimer;
 
-	[SerializeField]
-	protected PlayerManager player;
-
 	void Start () {
 	
 		this.InitValues();
 	}
 
-	public override void CastAbility() {
+	public override float CastAbility() {
 
-		this.transform.parent = null;
-		player.BlinkPlayer(this.blinkDistance);
+		float abilityCost = 0;
+		if(this.disabled == false && this.onCooldown == false) {
+			
+			abilityCost = this.energyCost;
 
-		StartCoroutine(this.CountDownBomb());
+			this.transform.parent = null;
+			player.BlinkPlayer(this.blinkDistance);
+
+			if(this.abilitySpriteManager == null) {
+
+				this.abilitySpriteManager = this.GetComponentInChildren<AbilitySprite>();
+			}
+
+			if(this.abilitySpriteManager != null) {
+
+				this.abilitySpriteManager.ShowSprite(this.bombTimer - 0.05f);
+			}
+
+			StartCoroutine(this.CoolDown());
+			StartCoroutine(this.CountDownBomb());
+		}
+
+		return abilityCost;
 	}
 
 	protected IEnumerator CountDownBomb() {

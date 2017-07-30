@@ -23,7 +23,7 @@ public class UIManager : MonoBehaviour {
 		
 	public void AbilityDisabled(int abilityNum, bool enabled) {
 
-		abilities[abilityNum].enabled = enabled;
+		abilities[abilityNum].interactable = enabled;
 	}
 
 	protected void SliderValueUpdated(float value) {

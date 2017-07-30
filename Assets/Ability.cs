@@ -13,10 +13,19 @@ public abstract class Ability : MonoBehaviour {
 	protected int energyCost;
 	[SerializeField]
 	protected int abilityNumber;
+	[SerializeField]
+	protected float cooldownLength;
+	[SerializeField]
+	protected float rootTimer;
+
+	protected bool onCooldown = false;
+	protected float power;
 
 	protected bool disabled = false;
 
 	protected List<Enemy> enemiesInRange;
+	protected PlayerManager player;
+	protected AbilitySprite abilitySpriteManager;
 
 	void Start() {
 
@@ -30,12 +39,34 @@ public abstract class Ability : MonoBehaviour {
 		this.transform.localScale = newScale;
 	}
 
-	public virtual void CastAbility() {
+	public virtual float CastAbility() {
 
-		if(this.disabled == false) {
-			
+		float abilityCost = 0;
+		if(this.disabled == false && this.onCooldown == false) {
+
+			abilityCost = this.energyCost;
+
+			if(this.abilitySpriteManager == null) {
+
+				this.abilitySpriteManager = this.GetComponentInChildren<AbilitySprite>();
+			}
+
+			if(this.abilitySpriteManager != null) {
+		
+				this.abilitySpriteManager.ShowSprite(this.rootTimer);
+			}
+
+			if(this.rootTimer > 0 && this.player != null) {
+
+				this.player.AbilityRoot(this.rootTimer);
+			}
+
 			this.DamageEnemies();
+
+			StartCoroutine(this.CoolDown());
 		}
+
+		return abilityCost;
 	}
 
 	protected virtual void DamageEnemies() {
@@ -45,15 +76,16 @@ public abstract class Ability : MonoBehaviour {
 			this.enemiesInRange[i].TakeDamage(this.damageDone);
 		}
 	}
-
+		
 	protected void PowerUpdated(float power) {
 
+		this.power = power;
 		if(power < this.powerDisableValue && this.disabled == false) {
 
 			this.disabled = true;
 			UIManager.sharedInstance.AbilityDisabled(this.abilityNumber, false);
 		} 
-		else if(this.disabled == true) {
+		else if(power >= this.powerDisableValue && this.disabled == true) {
 
 			UIManager.sharedInstance.AbilityDisabled(this.abilityNumber, true);
 			this.disabled = false;
@@ -71,6 +103,7 @@ public abstract class Ability : MonoBehaviour {
 	protected virtual void InitValues() {
 
 		this.CheckArray();
+		StartCoroutine(this.FindPlayer());
 	}
 
 	protected virtual void OnTriggerEnter2D(Collider2D col){ 
@@ -97,13 +130,26 @@ public abstract class Ability : MonoBehaviour {
 
 	protected IEnumerator FindPlayer() {
 
-		PlayerManager player = null;
-		while(player == null) {
+		while(this.player == null) {
 
-			player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerManager>();
+			this.player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerManager>();
 			yield return null;
 		}
 
-		player.playerPowerUpdated += this.PowerUpdated;
+		this.player.playerPowerUpdated += this.PowerUpdated;
+	}
+
+	protected IEnumerator CoolDown() {
+
+		this.onCooldown = true;
+		UIManager.sharedInstance.AbilityDisabled(this.abilityNumber, false);
+
+		yield return new WaitForSeconds(this.cooldownLength);
+
+		this.onCooldown = false;
+
+		if(this.power >= this.powerDisableValue) {
+			UIManager.sharedInstance.AbilityDisabled(this.abilityNumber, true);
+		}
 	}
 }

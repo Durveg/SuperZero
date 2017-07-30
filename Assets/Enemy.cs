@@ -12,13 +12,9 @@ public class Enemy : EnemySpriteController {
 	public event OnEnemyDestroyedDelegate OnEnemyDestoryed;
 
 	[SerializeField]
-	protected int health;
+	protected float health;
 
-	[SerializeField]
 	protected Transform target;
-
-	[SerializeField]
-	protected Transform defaultTarget;
 
 	[SerializeField]
 	protected float updateRate = 2f;
@@ -47,7 +43,18 @@ public class Enemy : EnemySpriteController {
 		this.seeker = this.GetComponent<Seeker>();
 		this.rBody = this.GetComponent<Rigidbody2D>();
 
+		HelpNeededEventManager manager = this.GetComponentInParent<HelpNeededEventManager>();
+		if(manager != null) {
+
+			manager.PlayerInZone += UpdateTarget;
+		}
+
 		StartCoroutine(this.UpdatePath());
+	}
+
+	protected void UpdateTarget(Transform newTarget) {
+
+		this.target = newTarget;
 	}
 
 	void FixedUpdate() {
@@ -82,13 +89,10 @@ public class Enemy : EnemySpriteController {
 
 			currentWaypoint++;
 		}
-
-
 	}
 
 	// Update is called once per frame
 	void Update () {
-
 
 		float y = Mathf.Clamp(this.transform.position.y, this.minMaxY.x, this.minMaxY.y);
 		this.transform.position = new Vector2(this.transform.position.x, y);
@@ -109,10 +113,10 @@ public class Enemy : EnemySpriteController {
 
 		//TODO: Signal for game manager here maybe.
 		//Add something else instead of destroying, maybe cache.
-		if(this.OnEnemyDestoryed != null) {
-
-			this.OnEnemyDestoryed(this);
-		}
+//		if(this.OnEnemyDestoryed != null) {
+//
+//			this.OnEnemyDestoryed(this);
+//		}
 
 		GameObject.Destroy(this.gameObject);
 	}

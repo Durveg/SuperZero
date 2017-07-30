@@ -11,6 +11,7 @@ public class PlayerManager : CharacterMovementController {
 	protected Rigidbody2D rBody;
 
 	protected bool playerOnChargeStation;
+	protected bool rooted = false;
 
 	[SerializeField]
 	protected float baseMovementSpeed;
@@ -57,7 +58,14 @@ public class PlayerManager : CharacterMovementController {
 
 	void FixedUpdate() {
 
-		this.rBody.velocity = new Vector2(Mathf.Lerp(0, Input.GetAxis("Horizontal") * this.movementSpeed, this.acceleration), Mathf.Lerp(0, Input.GetAxis("Vertical") * this.movementSpeed, this.acceleration));
+		if(this.rooted == false) {
+		
+			this.rBody.velocity = new Vector2(Mathf.Lerp(0, Input.GetAxis("Horizontal") * this.movementSpeed, this.acceleration), Mathf.Lerp(0, Input.GetAxis("Vertical") * this.movementSpeed, this.acceleration));
+		} 
+		else {
+
+			this.rBody.velocity = Vector2.zero;
+		}
 	}
 
 	void Update () {
@@ -65,22 +73,22 @@ public class PlayerManager : CharacterMovementController {
 		
 			if(Input.GetAxisRaw("Ability 1") > 0) {
 
-				this.ablities[0].CastAbility();
+				this.playerPower -= this.ablities[0].CastAbility();
 			}
 
 			if(Input.GetAxisRaw("Ability 2") > 0) {
 
-				this.ablities[1].CastAbility();
+				this.playerPower -= this.ablities[1].CastAbility();
 			}
 
 			if(Input.GetAxisRaw("Ability 3") > 0) {
 
-				this.ablities[2].CastAbility();
+				this.playerPower -= this.ablities[2].CastAbility();
 			}
 
 			if(Input.GetAxisRaw("Ability 4") > 0) {
 
-				this.ablities[3].CastAbility();
+				this.playerPower -= this.ablities[3].CastAbility();
 			}
 		}
 
@@ -117,6 +125,12 @@ public class PlayerManager : CharacterMovementController {
 	}
 	#endregion
 
+	#region Public Methods
+	public void AbilityRoot(float rootTimer) {
+
+		StartCoroutine(this.RootPlayer(rootTimer));
+	}
+
 	public void BlinkPlayer(float distance) {
 
 		Vector2 newPos = new Vector2();
@@ -138,6 +152,15 @@ public class PlayerManager : CharacterMovementController {
 	public void PlayerEnterChargingStation(bool onStation) {
 
 		this.playerOnChargeStation = onStation;
+	}
+	#endregion
+
+	#region CoRoutines
+	protected IEnumerator RootPlayer(float rootTimer) {
+
+		this.rooted = true;
+		yield return new WaitForSeconds(rootTimer);
+		this.rooted = false;
 	}
 
 	protected IEnumerator PowerDown() {
@@ -209,4 +232,5 @@ public class PlayerManager : CharacterMovementController {
 			increseCounter++;
 		}
 	}
+	#endregion
 }
