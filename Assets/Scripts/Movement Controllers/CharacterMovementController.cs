@@ -35,10 +35,16 @@ public class CharacterMovementController : MonoBehaviour {
 
 		float scale = minMaxScale.x + (percentDist * this.valDist);
 		scale = Mathf.Clamp(scale, this.minMaxScale.y, this.minMaxScale.x);
+		Vector3 newScale = new Vector3(scale, scale, 1);
+
+		if(playerSpriteTransform.localScale.x < 0) {
+
+			newScale.x *= -1;
+		}
 
 		if(playerSpriteTransform != null) {
 		
-			playerSpriteTransform.localScale = new Vector3(scale, scale, 1);
+			playerSpriteTransform.localScale = newScale;
 		}
 	}
 }

@@ -13,6 +13,14 @@ public class UIManager : MonoBehaviour {
 	protected Slider powerSlider;
 	[SerializeField]
 	protected Button[] abilities;
+	[SerializeField]
+	protected Text PowerText;
+	[SerializeField]
+	protected Text CiviliansSavedText;
+	[SerializeField]
+	protected Text CiviliansLostText;
+	protected int saved = 0;
+	protected int lost = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -26,9 +34,27 @@ public class UIManager : MonoBehaviour {
 		abilities[abilityNum].interactable = enabled;
 	}
 
+	public void CivilianSaved() {
+
+		this.saved++;
+		this.CiviliansSavedText.text = this.saved.ToString();
+	}
+
+	public void CivilianLost() {
+
+		this.lost++;
+		this.CiviliansLostText.text = this.lost.ToString();
+	}
+
+	public void DisplayGameOverScreen() {
+
+
+	}
+
 	protected void SliderValueUpdated(float value) {
 
 		this.powerSlider.value = value;
+		this.PowerText.text = string.Format("Power {0:F1} / 100", value);
 	}
 
 	protected IEnumerator FindPlayer() {

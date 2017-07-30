@@ -9,14 +9,19 @@ public class HelpNeededEventManager : MonoBehaviour {
 	public event PlayerInZoneDelegate PlayerInZone;
 
 	[SerializeField]
-	protected Transform defaultTarget;
+	protected HelpNeeded helpNeededTarget;
+	protected List<Enemy> eventEnemies;
+	protected Transform savedTarget;
 
 	void Start() {
 
+		eventEnemies = new List<Enemy>();
 		Enemy[] enemies = this.GetComponentsInChildren<Enemy>();
 		foreach(Enemy e in enemies) {
 
-			e.UpdateTarget(this.defaultTarget);
+			eventEnemies.Add(e);
+			e.OnEnemyDestoryed += EventEnemyDestoryed;
+			e.UpdateTarget(this.helpNeededTarget.transform);
 		}
 	}
 
@@ -31,13 +36,27 @@ public class HelpNeededEventManager : MonoBehaviour {
 		}
 	}
 
+	protected void EventEnemyDestoryed(Enemy enemy) {
+
+		this.eventEnemies.Remove(enemy);
+		if(this.eventEnemies.Count == 0) {
+
+			//TODO:Signal Thank you sound effect here.
+			//TODO:Signal Point gain.
+			this.helpNeededTarget.transform.parent = null;
+			this.helpNeededTarget.Saved(savedTarget);
+
+			GameObject.Destroy(this.gameObject);
+		}
+	}
+
 	protected virtual void OnTriggerExit2D(Collider2D col){ 
 
 		if(col.tag == "Player") {
 
 			if(PlayerInZone != null) {
 
-				this.PlayerInZone(defaultTarget);
+				this.PlayerInZone(this.helpNeededTarget.transform);
 			}
 		}
 	}

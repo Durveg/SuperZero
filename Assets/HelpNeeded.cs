@@ -6,10 +6,7 @@ using Pathfinding;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Seeker))]
-public class Enemy : EnemySpriteController {
-
-	public delegate void OnEnemyDestroyedDelegate(Enemy enemy);
-	public event OnEnemyDestroyedDelegate OnEnemyDestoryed;
+public class HelpNeeded : CharacterMovementController {
 
 	[SerializeField]
 	protected float health;
@@ -34,7 +31,22 @@ public class Enemy : EnemySpriteController {
 	public bool pathIsEnded = false;
 
 	public float nextWaypointDistance = 3;
-	protected float facing = 1;
+
+	public void Saved(Transform target) {
+
+		this.target = target;
+		StartCoroutine(this.UpdatePath());
+	}
+
+	public void TakeDamage(float damage) {
+
+		health -= damage;
+		if(health <= 0) {
+
+			//TODO:Signal helpNeeded lost
+			GameObject.Destroy(this.gameObject);
+		}
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -44,19 +56,6 @@ public class Enemy : EnemySpriteController {
 
 		this.seeker = this.GetComponent<Seeker>();
 		this.rBody = this.GetComponent<Rigidbody2D>();
-
-		HelpNeededEventManager manager = this.GetComponentInParent<HelpNeededEventManager>();
-		if(manager != null) {
-
-			manager.PlayerInZone += UpdateTarget;
-		}
-
-		StartCoroutine(this.UpdatePath());
-	}
-
-	public void UpdateTarget(Transform newTarget) {
-
-		this.target = newTarget;
 	}
 
 	void FixedUpdate() {
@@ -74,7 +73,7 @@ public class Enemy : EnemySpriteController {
 		if(currentWaypoint >= path.vectorPath.Count) {
 			if(pathIsEnded)
 				return;
-				
+
 			pathIsEnded = true;
 			return;
 		}
@@ -83,9 +82,6 @@ public class Enemy : EnemySpriteController {
 
 		Vector2 dir = (path.vectorPath[currentWaypoint] - this.transform.position).normalized;
 		dir *= this.speed * Time.fixedDeltaTime;
-
-
-
 
 		this.rBody.AddForce(dir, this.fMode);
 
@@ -99,54 +95,10 @@ public class Enemy : EnemySpriteController {
 	// Update is called once per frame
 	void Update () {
 
-		if(this.target != null) {
-
-			float xDir = (target.transform.position.x - this.transform.position.x);
-			float xScale = this.transform.localScale.x;
-			if(xDir > 0 && xScale < 0) {
-
-				Vector3 scale = this.transform.localScale;
-				scale.x *= -1;
-
-				this.transform.localScale = scale;
-			} 
-			else if(xDir < 0 && xScale > 0) {
-
-				Vector3 scale = this.transform.localScale;
-				scale.x = scale.x * -1;
-
-				this.transform.localScale = scale;
-			}
-		}
-
 		float y = Mathf.Clamp(this.transform.position.y, this.minMaxY.x, this.minMaxY.y);
 		this.transform.position = new Vector2(this.transform.position.x, y);
 
 		this.AdjustSpriteScale(this.transform.position);
-	}
-
-	public void TakeDamage(int damageTaken, Vector3 incoming, float force) {
-
-		this.health -= damageTaken;
-		if(this.health <= 0) {
-
-			this.EnemyDied();
-		}
-
-		Vector3 dir = (incoming - this.transform.position).normalized;
-		this.rBody.AddForce(dir * force * -1);
-	}
-
-	protected void EnemyDied() {
-
-		//TODO: Signal for game manager here maybe.
-		//Add something else instead of destroying, maybe cache.
-		if(this.OnEnemyDestoryed != null) {
-
-			this.OnEnemyDestoryed(this);
-		}
-
-		GameObject.Destroy(this.gameObject);
 	}
 
 	protected void OnPathComplete(Path p) {

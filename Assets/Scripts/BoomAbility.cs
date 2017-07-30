@@ -15,6 +15,7 @@ public class BoomAbility : Ability {
 		float abilityCost = 0;
 		if(this.disabled == false && this.onCooldown == false) {
 
+			this.onCooldown = true;
 			abilityCost = this.energyCost;
 
 			if(this.abilitySpriteManager == null) {

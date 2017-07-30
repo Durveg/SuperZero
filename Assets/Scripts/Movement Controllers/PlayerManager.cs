@@ -170,6 +170,11 @@ public class PlayerManager : CharacterMovementController {
 			if(this.playerOnChargeStation == false) {
 			
 				this.playerPower -= this.powerDownRate * Time.deltaTime;
+				if(this.playerPower < 0) {
+
+					GameManager.sharedInstance.GameOver();
+					this.playerPower = 0;
+				}
 			} 
 			else {
 
