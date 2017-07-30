@@ -47,10 +47,12 @@ public class PlayerManager : CharacterMovementController {
 
 		this.rBody = this.GetComponent<Rigidbody2D>();
 
-//		this.playerOnChargeStation = true;
+		this.playerOnChargeStation = true;
 		this.powerDownRate = this.powerDownBaseRate;
 		this.powerUpRate = this.powerUpBaseRate;
+
 		StartCoroutine(this.PowerDown());
+		StartCoroutine(this.ScalePowerDownRate());
 	}
 
 	void FixedUpdate() {
@@ -120,6 +122,15 @@ public class PlayerManager : CharacterMovementController {
 		Vector2 newPos = new Vector2();
 		newPos.y = this.transform.position.y;
 		newPos.x = this.transform.position.x + (distance * this.facingDirection);
+		if(newPos.x < -95.32143) {
+
+			newPos.x = -95.32143f;
+		} 
+		else if(newPos.x > 95.32143) {
+
+			newPos.x = 95.32143f;
+		}
+
 
 		this.transform.position = newPos;
 	}
@@ -139,9 +150,20 @@ public class PlayerManager : CharacterMovementController {
 			} 
 			else {
 
-				this.playerPower += this.powerUpRate * Time.deltaTime;
+				if((this.playerPower + this.powerUpRate * Time.deltaTime) <= 100) {
+				
+					this.playerPower += this.powerUpRate * Time.deltaTime;
+				} 
+				else {
+
+					this.playerPower = 100;
+				}
 			}
 
+			if(this.playerPowerUpdated != null) {
+
+				this.playerPowerUpdated(this.playerPower);
+			}
 			yield return null;
 		}
 	}
@@ -149,9 +171,42 @@ public class PlayerManager : CharacterMovementController {
 	protected IEnumerator ScalePowerDownRate() {
 
 		int increseCounter = 0;
+		int waitSeconds = 30;
 		while(true) {
-		
+			
+			yield return new WaitForSeconds(waitSeconds);
 
+			switch(increseCounter) {
+				
+			case(0):
+				this.powerDownRate *= 2;
+				break;
+
+			case(1):
+				this.powerDownRate *= 2;
+				waitSeconds = 60;
+				break;
+
+			case(2):
+				this.powerDownRate *= 2;
+				waitSeconds = 90;
+				break;
+
+			case(3):
+				this.powerDownRate *= 1.5f;
+				waitSeconds = 120;
+				break;
+
+			case(4):
+				break;
+
+			default:
+				this.powerDownRate *= 1.5f;
+				break;
+
+			}
+
+			increseCounter++;
 		}
 	}
 }
