@@ -12,7 +12,7 @@ public class HelpNeeded : CharacterMovementController {
 	protected float health;
 
 	[SerializeField]
-	protected Transform target;
+	protected Vector2 target;
 
 	[SerializeField]
 	protected float updateRate = 2f;
@@ -32,9 +32,10 @@ public class HelpNeeded : CharacterMovementController {
 
 	public float nextWaypointDistance = 3;
 
-	public void Saved(Transform target) {
+	public void Saved(Vector2 target) {
 
-		this.target = target;
+		UIManager.sharedInstance.CivilianSaved();
+		this.target  = target;
 		StartCoroutine(this.UpdatePath());
 	}
 
@@ -43,7 +44,7 @@ public class HelpNeeded : CharacterMovementController {
 		health -= damage;
 		if(health <= 0) {
 
-			//TODO:Signal helpNeeded lost
+			UIManager.sharedInstance.CivilianLost();
 			GameObject.Destroy(this.gameObject);
 		}
 	}
@@ -60,12 +61,6 @@ public class HelpNeeded : CharacterMovementController {
 
 	void FixedUpdate() {
 
-		if(this.target == null) {
-
-			//TODO: Path around.
-		}
-
-		//TODO: Add look at
 
 		if(path == null)
 			return;
@@ -74,6 +69,7 @@ public class HelpNeeded : CharacterMovementController {
 			if(pathIsEnded)
 				return;
 
+			GameObject.Destroy(this.gameObject);
 			pathIsEnded = true;
 			return;
 		}
@@ -114,10 +110,7 @@ public class HelpNeeded : CharacterMovementController {
 
 		while(true) {
 
-			if(this.target != null) {
-
-				seeker.StartPath(this.transform.position, target.position, OnPathComplete);
-			}
+			seeker.StartPath(this.transform.position, target, OnPathComplete);
 
 			yield return new WaitForSeconds(1 / updateRate);
 		}

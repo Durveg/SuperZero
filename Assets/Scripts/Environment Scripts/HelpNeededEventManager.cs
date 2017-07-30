@@ -11,7 +11,8 @@ public class HelpNeededEventManager : MonoBehaviour {
 	[SerializeField]
 	protected HelpNeeded helpNeededTarget;
 	protected List<Enemy> eventEnemies;
-	protected Transform savedTarget;
+	protected Vector2 savedTarget;
+	public GameObject marker;
 
 	void Start() {
 
@@ -23,6 +24,20 @@ public class HelpNeededEventManager : MonoBehaviour {
 			e.OnEnemyDestoryed += EventEnemyDestoryed;
 			e.UpdateTarget(this.helpNeededTarget.transform);
 		}
+	}
+
+	void Update() {
+
+		if(this.helpNeededTarget == null) {
+
+			MiniMap.sharedInstance.EventEnded(this.marker);
+		}
+	}
+
+	public void SetExitLocation(Vector2 loc) {
+
+		StartCoroutine(SetMarkerCoRoutine());
+		this.savedTarget = loc;
 	}
 
 	protected virtual void OnTriggerEnter2D(Collider2D col){ 
@@ -43,8 +58,12 @@ public class HelpNeededEventManager : MonoBehaviour {
 
 			//TODO:Signal Thank you sound effect here.
 			//TODO:Signal Point gain.
-			this.helpNeededTarget.transform.parent = null;
-			this.helpNeededTarget.Saved(savedTarget);
+			if(this.helpNeededTarget != null) { 
+			
+				this.helpNeededTarget.transform.parent = null;
+				this.helpNeededTarget.Saved(savedTarget);
+			}
+			MiniMap.sharedInstance.EventEnded(this.marker);
 
 			GameObject.Destroy(this.gameObject);
 		}
@@ -56,8 +75,21 @@ public class HelpNeededEventManager : MonoBehaviour {
 
 			if(PlayerInZone != null) {
 
-				this.PlayerInZone(this.helpNeededTarget.transform);
+				if(this.helpNeededTarget != null) {
+				
+					this.PlayerInZone(this.helpNeededTarget.transform);
+				}
 			}
 		}
+	}
+
+	protected IEnumerator SetMarkerCoRoutine() {
+
+		while(MiniMap.sharedInstance == null) {
+
+			yield return null;
+		}
+
+		this.marker = MiniMap.sharedInstance.EventSpawned(this.transform.position.x);
 	}
 }

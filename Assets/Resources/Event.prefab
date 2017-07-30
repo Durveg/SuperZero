@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 114176687036623902}
   - component: {fileID: 70953629531181254}
   m_Layer: 10
-  m_Name: HelpNeededEvent
+  m_Name: Event
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -182,7 +182,7 @@ Transform:
   m_LocalScale: {x: 0.9, y: 0.9, z: 1}
   m_Children: []
   m_Father: {fileID: 4658673602616544}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4601037961002868
 Transform:
@@ -195,7 +195,7 @@ Transform:
   m_LocalScale: {x: 0.9, y: 0.9, z: 1}
   m_Children: []
   m_Father: {fileID: 4658673602616544}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4658673602616544
 Transform:
@@ -207,8 +207,8 @@ Transform:
   m_LocalPosition: {x: -81.06, y: -3.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4601037961002868}
   - {fileID: 4579377963158490}
+  - {fileID: 4601037961002868}
   - {fileID: 4166043948842282}
   - {fileID: 4065635710197790}
   - {fileID: 4091550470336382}
@@ -598,6 +598,7 @@ MonoBehaviour:
   minMaxY: {x: 0, y: 0}
   minMaxScale: {x: 0, y: 0}
   health: 10
+  damageDealt: 0.5
   target: {fileID: 0}
   updateRate: 2
   speed: 150
@@ -615,7 +616,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 958b62f5b7c7a4f409fb39180de378a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  helpNeededTarget: {fileID: 0}
+  helpNeededTarget: {fileID: 114579658349864512}
+  marker: {fileID: 0}
 --- !u!114 &114273473598814012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -631,6 +633,7 @@ MonoBehaviour:
   minMaxY: {x: 0, y: 0}
   minMaxScale: {x: 0, y: 0}
   health: 10
+  damageDealt: 0.5
   target: {fileID: 0}
   updateRate: 2
   speed: 150
@@ -708,6 +711,7 @@ MonoBehaviour:
   minMaxY: {x: 0, y: 0}
   minMaxScale: {x: 0, y: 0}
   health: 10
+  damageDealt: 0.5
   target: {fileID: 0}
   updateRate: 2
   speed: 150
@@ -729,7 +733,7 @@ MonoBehaviour:
   minMaxY: {x: 0, y: 0}
   minMaxScale: {x: 0, y: 0}
   health: 20
-  target: {fileID: 0}
+  target: {x: 0, y: 0}
   updateRate: 2
   speed: 150
   fMode: 0
@@ -750,6 +754,7 @@ MonoBehaviour:
   minMaxY: {x: 0, y: 0}
   minMaxScale: {x: 0, y: 0}
   health: 10
+  damageDealt: 0.5
   target: {fileID: 0}
   updateRate: 2
   speed: 150

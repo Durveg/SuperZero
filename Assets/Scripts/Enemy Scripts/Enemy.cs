@@ -13,6 +13,8 @@ public class Enemy : EnemySpriteController {
 
 	[SerializeField]
 	protected float health;
+	[SerializeField]
+	protected float damageDealt;
 
 	[SerializeField]
 	protected Transform target;
@@ -36,6 +38,8 @@ public class Enemy : EnemySpriteController {
 	public float nextWaypointDistance = 3;
 	protected float facing = 1;
 
+	protected HelpNeeded citizen;
+
 	// Use this for initialization
 	void Start () {
 
@@ -52,6 +56,7 @@ public class Enemy : EnemySpriteController {
 		}
 
 		StartCoroutine(this.UpdatePath());
+		StartCoroutine(this.DealDamageCitizen());
 	}
 
 	public void UpdateTarget(Transform newTarget) {
@@ -158,6 +163,24 @@ public class Enemy : EnemySpriteController {
 		}
 	}
 
+	protected virtual void OnTriggerEnter2D(Collider2D col){ 
+
+		HelpNeeded citizen = col.GetComponent<HelpNeeded>();
+		if(citizen != null) {
+
+			this.citizen = citizen;
+		}
+	}
+
+	protected virtual void OnTriggerExit2D(Collider2D col){ 
+
+		HelpNeeded citizen = col.GetComponent<HelpNeeded>();
+		if(citizen != null) {
+
+			this.citizen = null;
+		}
+	}
+
 	protected IEnumerator UpdatePath() {
 
 		while(true) {
@@ -168,6 +191,19 @@ public class Enemy : EnemySpriteController {
 			}
 
 			yield return new WaitForSeconds(1 / updateRate);
+		}
+	}
+
+	protected IEnumerator DealDamageCitizen() {
+
+		while(true) {
+
+			if(this.citizen != null && this.target.tag != "Player") {
+
+				this.citizen.TakeDamage(this.damageDealt);
+			}
+
+			yield return new WaitForSeconds(1);
 		}
 	}
 }

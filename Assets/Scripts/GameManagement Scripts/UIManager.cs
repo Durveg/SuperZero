@@ -22,16 +22,35 @@ public class UIManager : MonoBehaviour {
 	protected int saved = 0;
 	protected int lost = 0;
 
+	[SerializeField]
+	protected GameObject gameOverScreen;
+	[SerializeField]
+	protected Text gameOverLostText;
+	[SerializeField]
+	protected Text gameOverSavedText;
+
+	[SerializeField]
+	protected GameObject pauseScreen;
+
 	// Use this for initialization
 	void Start () {
 
 		sharedInstance = this;
+		GameManager.sharedInstance.gamePausedEvent += GameWasPaused;
+		gameOverScreen.gameObject.SetActive(false);
+		pauseScreen.gameObject.SetActive(false);
+
 		StartCoroutine(this.FindPlayer());
 	}
 		
 	public void AbilityDisabled(int abilityNum, bool enabled) {
 
 		abilities[abilityNum].interactable = enabled;
+	}
+
+	void GameWasPaused(bool paused) {
+
+		this.pauseScreen.gameObject.SetActive(paused);
 	}
 
 	public void CivilianSaved() {
@@ -44,11 +63,19 @@ public class UIManager : MonoBehaviour {
 
 		this.lost++;
 		this.CiviliansLostText.text = this.lost.ToString();
+
+		if(this.lost >= 5) {
+
+			GameManager.sharedInstance.GameOver();
+		}
 	}
 
 	public void DisplayGameOverScreen() {
 
-
+		this.pauseScreen.gameObject.SetActive(false);
+		this.gameOverScreen.gameObject.SetActive(true);
+		this.gameOverLostText.text = this.lost.ToString();
+		this.gameOverSavedText.text = this.saved.ToString();
 	}
 
 	protected void SliderValueUpdated(float value) {
