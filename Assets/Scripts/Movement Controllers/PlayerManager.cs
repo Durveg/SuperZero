@@ -10,6 +10,8 @@ public class PlayerManager : CharacterMovementController {
 
 	protected Rigidbody2D rBody;
 
+	protected bool playerOnChargeStation;
+
 	[SerializeField]
 	protected float baseMovementSpeed;
 	[SerializeField]
@@ -18,9 +20,17 @@ public class PlayerManager : CharacterMovementController {
 	protected float sprintMovementSpeed;
 	[SerializeField]
 	protected float sprintAcceleration;
+	[SerializeField] 
+	protected float powerDownBaseRate;
+	protected float powerDownRate;
+
+	[SerializeField]
+	protected float powerUpBaseRate;
+	protected float powerUpRate;
 
 	protected float movementSpeed;
 	protected float acceleration;
+	protected float playerPower = 100;
 
 	[SerializeField]
 	protected List<Ability> ablities;
@@ -36,6 +46,11 @@ public class PlayerManager : CharacterMovementController {
 		}
 
 		this.rBody = this.GetComponent<Rigidbody2D>();
+
+//		this.playerOnChargeStation = true;
+		this.powerDownRate = this.powerDownBaseRate;
+		this.powerUpRate = this.powerUpBaseRate;
+		StartCoroutine(this.PowerDown());
 	}
 
 	void FixedUpdate() {
@@ -107,5 +122,36 @@ public class PlayerManager : CharacterMovementController {
 		newPos.x = this.transform.position.x + (distance * this.facingDirection);
 
 		this.transform.position = newPos;
+	}
+
+	public void PlayerEnterChargingStation(bool onStation) {
+
+		this.playerOnChargeStation = onStation;
+	}
+
+	protected IEnumerator PowerDown() {
+
+		while(true) {
+
+			if(this.playerOnChargeStation == false) {
+			
+				this.playerPower -= this.powerDownRate * Time.deltaTime;
+			} 
+			else {
+
+				this.playerPower += this.powerUpRate * Time.deltaTime;
+			}
+
+			yield return null;
+		}
+	}
+
+	protected IEnumerator ScalePowerDownRate() {
+
+		int increseCounter = 0;
+		while(true) {
+		
+
+		}
 	}
 }

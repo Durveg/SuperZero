@@ -11,7 +11,7 @@ public class BlinkBomb : Ability {
 	protected float bombTimer;
 
 	[SerializeField]
-	protected PlayerMovementController player;
+	protected PlayerManager player;
 
 	void Start () {
 	

@@ -5,28 +5,40 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
 
-	protected PlayerMovementController player;
+	public static UIManager sharedInstance;
+
+	protected PlayerManager player;
 
 	[SerializeField]
 	protected Slider powerSlider;
+	[SerializeField]
+	protected Button[] abilities;
 
 	// Use this for initialization
 	void Start () {
 
+		sharedInstance = this;
 		StartCoroutine(this.FindPlayer());
 	}
 		
-	protected void SliderValueUpdated() {
+	public void AbilityDisabled(int abilityNum, bool enabled) {
 
+		abilities[abilityNum].enabled = enabled;
+	}
 
+	protected void SliderValueUpdated(float value) {
+
+		this.powerSlider.value = value;
 	}
 
 	protected IEnumerator FindPlayer() {
 
 		while(this.player == null) {
 
-			this.player = GameObject.FindGameObjectWithTag("Player");
+			this.player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerManager>();
 			yield return null;
 		}
+
+		this.player.playerPowerUpdated += this.SliderValueUpdated;
 	}
 }
