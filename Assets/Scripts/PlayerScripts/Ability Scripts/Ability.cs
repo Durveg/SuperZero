@@ -16,7 +16,7 @@ public abstract class Ability : MonoBehaviour {
 	[SerializeField]
 	protected float cooldownLength;
 	[SerializeField]
-	protected float rootTimer;
+	public float rootTimer;
 	[SerializeField]
 	protected float knockBackForce;
 

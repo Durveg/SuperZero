@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Spine.Unity;
+
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerManager : CharacterMovementController {
 
@@ -38,6 +40,9 @@ public class PlayerManager : CharacterMovementController {
 
 	protected float facingDirection = 1;
 
+	[SerializeField]
+	protected AnimationController controller;
+
 	#region Unity Methods
 	void Start () {
 
@@ -59,8 +64,13 @@ public class PlayerManager : CharacterMovementController {
 	void FixedUpdate() {
 
 		if(this.rooted == false) {
-		
+
+			this.controller.Walk();
 			this.rBody.velocity = new Vector2(Mathf.Lerp(0, Input.GetAxis("Horizontal") * this.movementSpeed, this.acceleration), Mathf.Lerp(0, Input.GetAxis("Vertical") * this.movementSpeed, this.acceleration));
+			if(Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) {
+
+				this.controller.Idle();
+			}
 		} 
 		else {
 
@@ -73,16 +83,20 @@ public class PlayerManager : CharacterMovementController {
 		
 			if(Input.GetAxisRaw("Ability 1") > 0) {
 
+
+				this.controller.punch();
 				this.playerPower -= this.ablities[0].CastAbility();
 			}
 
 			if(Input.GetAxisRaw("Ability 2") > 0) {
 
+				this.controller.Rooted(this.ablities[1].rootTimer, "Idle");
 				this.playerPower -= this.ablities[1].CastAbility();
 			}
 
 			if(Input.GetAxisRaw("Ability 3") > 0) {
 
+				this.controller.Rooted(this.ablities[2].rootTimer, "Idle");
 				this.playerPower -= this.ablities[2].CastAbility();
 			}
 
@@ -98,10 +112,7 @@ public class PlayerManager : CharacterMovementController {
 			if(this.facingDirection != dir) {
 
 				this.facingDirection = dir;
-				foreach(Ability ab in this.ablities) {
-
-					ab.FlipDamageArea();
-				}
+				this.FlipDamageArea();
 			}
 		}
 
@@ -155,6 +166,13 @@ public class PlayerManager : CharacterMovementController {
 	}
 	#endregion
 
+	protected void FlipDamageArea() {
+
+		Vector3 newScale = this.transform.localScale;
+		newScale.x = newScale.x * -1f;
+		this.transform.localScale = newScale;
+	}
+
 	#region CoRoutines
 	protected IEnumerator RootPlayer(float rootTimer) {
 
@@ -172,7 +190,7 @@ public class PlayerManager : CharacterMovementController {
 				this.playerPower -= this.powerDownRate * Time.deltaTime;
 				if(this.playerPower < 0) {
 
-					GameManager.sharedInstance.GameOver();
+					StartCoroutine(this.delayGameOver());
 					this.playerPower = 0;
 				}
 			} 
@@ -194,6 +212,13 @@ public class PlayerManager : CharacterMovementController {
 			}
 			yield return null;
 		}
+	}
+
+	protected IEnumerator delayGameOver() {
+
+		this.controller.Die();
+		yield return new WaitForSeconds(.5f);
+		GameManager.sharedInstance.GameOver();
 	}
 
 	protected IEnumerator ScalePowerDownRate() {

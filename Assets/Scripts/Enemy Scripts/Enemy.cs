@@ -198,7 +198,7 @@ public class Enemy : EnemySpriteController {
 
 		while(true) {
 
-			if(this.citizen != null && this.target.tag != "Player") {
+			if(this.citizen != null && this.target != null && this.target.tag != "Player") {
 
 				this.citizen.TakeDamage(this.damageDealt);
 			}

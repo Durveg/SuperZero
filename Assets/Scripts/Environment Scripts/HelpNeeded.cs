@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Pathfinding;
+using Spine.Unity;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Seeker))]
@@ -33,6 +34,9 @@ public class HelpNeeded : CharacterMovementController {
 	public float nextWaypointDistance = 3;
 
 	public void Saved(Vector2 target) {
+
+		SkeletonAnimation skel = this.GetComponent<SkeletonAnimation>();
+		skel.AnimationState.SetAnimation(0, "Walk Normal", true);
 
 		UIManager.sharedInstance.CivilianSaved();
 		this.target  = target;
@@ -90,6 +94,26 @@ public class HelpNeeded : CharacterMovementController {
 
 	// Update is called once per frame
 	void Update () {
+
+		if(this.target != Vector2.zero) {
+
+			float xDir = (target.x - this.transform.position.x);
+			float xScale = this.transform.localScale.x;
+			if(xDir > 0 && xScale < 0) {
+
+				Vector3 scale = this.transform.localScale;
+				scale.x *= -1;
+
+				this.transform.localScale = scale;
+			} 
+			else if(xDir < 0 && xScale > 0) {
+
+				Vector3 scale = this.transform.localScale;
+				scale.x = scale.x * -1;
+
+				this.transform.localScale = scale;
+			}
+		}
 
 		float y = Mathf.Clamp(this.transform.position.y, this.minMaxY.x, this.minMaxY.y);
 		this.transform.position = new Vector2(this.transform.position.x, y);
