@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Pathfinding;
+using Spine.Unity;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Seeker))]
@@ -40,6 +41,8 @@ public class Enemy : EnemySpriteController {
 
 	protected HelpNeeded citizen;
 
+	protected SkeletonDataAsset dataAsset;
+
 	// Use this for initialization
 	void Start () {
 
@@ -48,6 +51,7 @@ public class Enemy : EnemySpriteController {
 
 		this.seeker = this.GetComponent<Seeker>();
 		this.rBody = this.GetComponent<Rigidbody2D>();
+
 
 		HelpNeededEventManager manager = this.GetComponentInParent<HelpNeededEventManager>();
 		if(manager != null) {
@@ -137,6 +141,7 @@ public class Enemy : EnemySpriteController {
 
 			this.EnemyDied();
 		}
+
 
 		Vector3 dir = (incoming - this.transform.position).normalized;
 		this.rBody.AddForce(dir * force * -1);

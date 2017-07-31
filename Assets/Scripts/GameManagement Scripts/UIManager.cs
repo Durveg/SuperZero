@@ -64,7 +64,7 @@ public class UIManager : MonoBehaviour {
 		this.lost++;
 		this.CiviliansLostText.text = this.lost.ToString();
 
-		if(this.lost >= 5) {
+		if(this.lost >= 10) {
 
 			GameManager.sharedInstance.GameOver();
 		}
