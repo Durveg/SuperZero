@@ -1057,7 +1057,7 @@ MonoBehaviour:
   playerSpriteTransform: {fileID: 4579377963158490}
   minMaxY: {x: 0, y: 0}
   minMaxScale: {x: 0, y: 0}
-  health: 20
+  health: 40
   target: {x: 0, y: 0}
   updateRate: 2
   speed: 150

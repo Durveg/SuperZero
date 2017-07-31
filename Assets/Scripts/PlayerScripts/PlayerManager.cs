@@ -236,12 +236,12 @@ public class PlayerManager : CharacterMovementController {
 				break;
 
 			case(1):
-				this.powerDownRate *= 2;
+				this.powerDownRate *= 1;
 				waitSeconds = 60;
 				break;
 
 			case(2):
-				this.powerDownRate *= 2;
+				this.powerDownRate *= 1.25f;
 				waitSeconds = 90;
 				break;
 

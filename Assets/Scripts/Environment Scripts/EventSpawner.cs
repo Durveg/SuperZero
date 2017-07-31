@@ -40,19 +40,19 @@ public class EventSpawner : MonoBehaviour {
 			switch(increseCounter) {
 
 			case(0):
-				this.spawnEventTimer = 18;
+				this.spawnEventTimer = 20;
 				break;
 
 			case(1):
-				this.spawnEventTimer = 15;
+				this.spawnEventTimer = 18;
 				break;
 
 			case(2):
-				this.spawnEventTimer = 12;
+				this.spawnEventTimer = 16;
 				break;
 
 			case(3):
-				this.spawnEventTimer = 10f;
+				this.spawnEventTimer = 15f;
 				break;
 
 			case(4):

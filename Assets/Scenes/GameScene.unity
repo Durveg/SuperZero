@@ -356,8 +356,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   powerDisableValue: 50
-  damageDone: 5
-  energyCost: 5
+  damageDone: 7
+  energyCost: 0
   abilityNumber: 2
   cooldownLength: 5
   rootTimer: 1
@@ -5384,8 +5384,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   powerDisableValue: 75
-  damageDone: 5
-  energyCost: 5
+  damageDone: 6
+  energyCost: 0
   abilityNumber: 3
   cooldownLength: 5
   rootTimer: 0
@@ -6719,8 +6719,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   powerDisableValue: 0
-  damageDone: 2
-  energyCost: 1
+  damageDone: 4
+  energyCost: 0
   abilityNumber: 0
   cooldownLength: 0.25
   rootTimer: 0.25
@@ -6867,8 +6867,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   powerDisableValue: 25
-  damageDone: 4
-  energyCost: 3
+  damageDone: 6
+  energyCost: 0
   abilityNumber: 1
   cooldownLength: 2
   rootTimer: 0.5
@@ -7553,7 +7553,7 @@ MonoBehaviour:
   sprintMovementSpeed: 10
   sprintAcceleration: 5
   powerDownBaseRate: 0.5
-  powerUpBaseRate: 10
+  powerUpBaseRate: 20
   ablities:
   - {fileID: 1575138436}
   - {fileID: 1603421994}
