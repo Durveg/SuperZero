@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoomAbility : Ability {
+public class LaserAbility : Ability {
 
 	// Use this for initialization
 	void Start () {
-
+	
 		this.InitValues();
 	}
-	
+
 	public override float CastAbility() {
 
 		float abilityCost = 0;
 		if(this.disabled == false && this.onCooldown == false) {
 
-			this.onCooldown = true;
+			SoundManager.sharedInstance.PlayLaser();
 			abilityCost = this.energyCost;
 
 			if(this.abilitySpriteManager == null) {
@@ -32,19 +32,12 @@ public class BoomAbility : Ability {
 
 				this.player.AbilityRoot(this.rootTimer);
 			}
-				
-			StartCoroutine(this.WaitForDamage(this.rootTimer));
+
+			this.DamageEnemies();
+
+			StartCoroutine(this.CoolDown());
 		}
 
 		return abilityCost;
-	}
-
-	private IEnumerator WaitForDamage(float timer) {
-
-		yield return new WaitForSeconds(timer);
-
-		SoundManager.sharedInstance.playPound();
-		this.DamageEnemies();
-		StartCoroutine(this.CoolDown());
 	}
 }

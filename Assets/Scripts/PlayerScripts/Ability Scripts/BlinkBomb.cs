@@ -19,7 +19,9 @@ public class BlinkBomb : Ability {
 
 		float abilityCost = 0;
 		if(this.disabled == false && this.onCooldown == false) {
-			
+
+			SoundManager.sharedInstance.PlayBlink();
+
 			abilityCost = this.energyCost;
 
 			this.transform.parent = null;
@@ -47,6 +49,8 @@ public class BlinkBomb : Ability {
 		yield return new WaitForSeconds(this.bombTimer);
 
 		this.DamageEnemies();
+
+		SoundManager.sharedInstance.PlayBlinkBomb();
 
 		this.transform.parent = player.transform;
 		this.transform.localPosition = Vector3.zero;

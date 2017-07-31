@@ -38,6 +38,7 @@ public class HelpNeeded : CharacterMovementController {
 		SkeletonAnimation skel = this.GetComponent<SkeletonAnimation>();
 		skel.AnimationState.SetAnimation(0, "Walk Normal", true);
 
+		SoundManager.sharedInstance.PlayThankYou();
 		UIManager.sharedInstance.CivilianSaved();
 		this.target  = target;
 		StartCoroutine(this.UpdatePath());
